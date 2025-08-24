@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Ayed Alqarni Awards - Feedback Form</title>
+    <style>
+        :root {
+            --primary-color: #1a4f72;
+            --secondary-color: #3a7cb4;
+            --accent-color: #e6af2e;
+            --light-color: #f5f7fa;
+            --dark-color: #2c3e50;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --border-radius: 0.5rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--light-color) 0%, #e3f2fd 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .feedback-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        
+        .feedback-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+        
+        .feedback-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        }
+        
+        .feedback-title {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feedback-title::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%); }
+            50% { transform: translateX(0) translateY(0); }
+        }
+        
+        .feedback-heading {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feedback-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+            margin: 0;
+        }
+        
+        .feedback-form {
+            padding: 0;
+        }
+        
+        .feedback-section {
+            padding: 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            position: relative;
+        }
+        
+        .feedback-section:last-child {
+            border-bottom: none;
+        }
+        
+        .feedback-section-title {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .feedback-section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 1.2em;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        .feedback-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .feedback-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        
+        .feedback-input,
+        .feedback-select,
+        .feedback-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background-color: var(--white);
+            position: relative;
+        }
+        
+        .feedback-input:focus,
+        .feedback-select:focus,
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(58, 124, 180, 0.15);
+            transform: translateY(-1px);
+        }
+        
+        .feedback-input:hover,
+        .feedback-select:hover,
+        .feedback-textarea:hover {
+            border-color: var(--gray-400);
+        }
+        
+        .feedback-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .feedback-required::after {
+            content: " *";
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+        
+        /* Suggestion sections styling */
+        .suggestion-section {
+            background: linear-gradient(135deg, var(--gray-100) 0%, #f0f8ff 100%);
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s ease;
+        }
+        
+        .suggestion-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .suggestion-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--secondary-color), transparent);
+        }
+        
+        .suggestion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .suggestion-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .remove-suggestion {
+            background: var(--danger-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        
+        .remove-suggestion:hover {
+            background: #c82333;
+            transform: scale(1.1);
+        }
+        
+        /* Character counter styling */
+        .char-counter {
+            text-align: right;
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+            transition: var(--transition);
+        }
+        
+        .char-counter.warning {
+            color: var(--warning-color);
+            font-weight: 600;
+        }
+        
+        .char-counter.danger {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        /* Add suggestion button */
+        .add-suggestion-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .add-suggestion-btn {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--accent-color) 100%);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .add-suggestion-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .add-suggestion-btn:disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .feedback-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: inherit;
+            transition: var(--transition);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feedback-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .feedback-btn:hover::before {
+            left: 100%;
+        }
+        
+        .feedback-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feedback-btn:active {
+            transform: translateY(0);
+        }
+        
+        .feedback-btn-submit {
+            background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
+            width: 100%;
+            padding: 1.25rem;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            position: relative;
+        }
+        
+        .feedback-btn-submit:hover {
+            background: linear-gradient(135deg, #218838 0%, #1ba085 100%);
+        }
+        
+        .feedback-hidden {
+            display: none !important;
+        }
+        
+        .feedback-confirmation {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-100) 100%);
+            position: relative;
+        }
+        
+        .feedback-confirmation-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1.5rem;
+            animation: checkmark 0.6s ease-in-out;
+            display: inline-block;
+        }
+        
+        @keyframes checkmark {
+            0% {
+                transform: scale(0) rotate(45deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(45deg);
+                opacity: 1;
+            }
+        }
+        
+        .feedback-confirmation h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .feedback-confirmation p {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .feedback-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: var(--success-color);
+            width: 0;
+            transition: width 2s ease;
+        }
+        
+        .feedback-loading {
+            position: relative;
+        }
+        
+        .feedback-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        .feedback-error,
+        .feedback-success {
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+        
+        .feedback-error {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+        
+        .feedback-success {
+            background: var(--success-color);
+            color: var(--white);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .feedback-container {
+                padding: 1rem 0.5rem;
+            }
+            
+            .feedback-title {
+                padding: 1.5rem 1rem;
+            }
+            
+            .feedback-section {
+                padding: 1.5rem 1rem;
+            }
+            
+            .suggestion-section {
+                padding: 1rem;
+            }
+            
+            .feedback-confirmation {
+                padding: 2rem 1rem;
+            }
+            
+            .suggestion-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .feedback-container {
+                padding: 0.5rem 0.25rem;
+            }
+            
+            .feedback-title {
+                padding: 1.25rem 0.75rem;
+            }
+            
+            .feedback-section {
+                padding: 1.25rem 0.75rem;
+            }
+            
+            .feedback-btn-submit {
+                font-size: 1.1rem;
+                padding: 1rem;
+            }
+        }
+        
+        /* Accessibility improvements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .feedback-input:invalid,
+        .feedback-select:invalid,
+        .feedback-textarea:invalid {
+            border-color: var(--danger-color);
+        }
+        
+        .feedback-input:valid,
+        .feedback-select:valid,
+        .feedback-textarea:valid {
+            border-color: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-container">
+        <div class="feedback-card">
+            <div class="feedback-title">
+                <h1 class="feedback-heading">Dr. Ayed Alqarni Awards</h1>
+                <p class="feedback-subtitle">Feedback and Improvement Form for Council Members</p>
+            </div>
+            
+            <form id="feedbackForm" class="feedback-form">
+                <div class="feedback-section">
+                    <h2 class="feedback-section-title">Council Member Information</h2>
+                    
+                    <div class="feedback-group">
+                        <label for="formname" class="feedback-label feedback-required">Your Full Name</label>
+                        <input 
+                            type="text" 
+                            class="feedback-input" 
+                            id="formname" 
+                            name="name" 
+                            required 
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                        >
+                    </div>
+                    
+                    <div class="feedback-group">
+                        <label for="email" class="feedback-label">Email Address (Optional)</label>
+                        <input 
+                            type="email" 
+                            class="feedback-input" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your email for follow-up"
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <h2 class="feedback-section-title">Feedback Details</h2>
+                    
+                    <div class="feedback-error" id="errorMessage"></div>
+                    <div class="feedback-success" id="successMessage"></div>
+
+                    <div id="suggestionsContainer">
+                        <!-- First suggestion (always visible) -->
+                        <div class="suggestion-section show" data-suggestion="1">
+                            <div class="suggestion-header">
+                                <h3 class="suggestion-title">1st Suggested Improvement</h3>
+                            </div>
+                            
+                            <div class="feedback-group">
+                                <label for="issueDescription1" class="feedback-label feedback-required">Please describe the issue in detail</label>
+                                <textarea 
+                                    id="issueDescription1" 
+                                    class="feedback-textarea" 
+                                    name="issueDescription1" 
+                                    placeholder="Please enter the details"
+                                    rows="4"
+                                    maxlength="400"
+                                    required
+                                ></textarea>
+                                <div class="char-counter" id="issueCounter1">400 characters remaining</div>
+                            </div>
+                            
+                            <div class="feedback-group">
+                                <label for="suggestions1" class="feedback-label feedback-required">Suggested Improvements</label>
+                                <textarea 
+                                    id="suggestions1" 
+                                    class="feedback-textarea" 
+                                    name="suggestions1" 
+                                    placeholder="Please enter the details"
+                                    rows="4"
+                                    maxlength="400"
+                                    required
+                                ></textarea>
+                                <div class="char-counter" id="suggestionsCounter1">400 characters remaining</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="add-suggestion-container">
+                        <button type="button" class="add-suggestion-btn" id="addSuggestionBtn">
+                            <span>+</span> Add Another Suggestion
+                        </button>
+                        <p style="font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem;">
+                            You can add up to 4 suggestions total
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="feedback-section">
+                    <button type="submit" class="feedback-btn feedback-btn-submit" id="submitBtn">
+                        Submit Feedback
+                    </button>
+                </div>
+            </form>
+            
+            <div id="confirmation" class="feedback-confirmation feedback-hidden">
+                <div class="feedback-confirmation-icon">✓</div>
+                <h2>Thank You for Your Valuable Feedback!</h2>
+                <p>Your input has been successfully recorded and will be carefully reviewed by the council leadership.</p>
+                <p>You will receive a notification when it's time to vote on the proposed improvements, along with a summary of all submitted feedback.</p>
+                <p>Your contribution helps us continuously improve the Dr. Ayed Alqarni Awards process.</p>
+                <div class="feedback-progress"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('feedbackForm');
+            const confirmation = document.getElementById('confirmation');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const progressBar = document.querySelector('.feedback-progress');
+            const addSuggestionBtn = document.getElementById('addSuggestionBtn');
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            
+            let suggestionCount = 1;
+            const maxSuggestions = 4;
+            
+            // Show/hide error messages
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Character counter functionality
+            function setupCharCounter(textareaId, counterId) {
+                const textarea = document.getElementById(textareaId);
+                const counter = document.getElementById(counterId);
+                
+                if (!textarea || !counter) return;
+                
+                textarea.addEventListener('input', function() {
+                    const remaining = 400 - this.value.length;
+                    counter.textContent = `${remaining} characters remaining`;
+                    
+                    counter.classList.remove('warning', 'danger');
+                    if (remaining <= 20) {
+                        counter.classList.add('danger');
+                    } else if (remaining <= 50) {
+                        counter.classList.add('warning');
+                    }
+                    
+                    // Auto-resize
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            }
+            
+            // Add suggestion functionality
+            function addSuggestion() {
+                if (suggestionCount >= maxSuggestions) return;
+                
+                suggestionCount++;
+                
+                const suggestionHtml = `
+                    <div class="suggestion-section" data-suggestion="${suggestionCount}">
+                        <div class="suggestion-header">
+                            <h3 class="suggestion-title">${getOrdinal(suggestionCount)} Suggested Improvement</h3>
+                            <button type="button" class="remove-suggestion" onclick="removeSuggestion(${suggestionCount})">×</button>
+                        </div>
+                        
+                        <div class="feedback-group">
+                            <label for="issueDescription${suggestionCount}" class="feedback-label feedback-required">Please describe the issue in detail</label>
+                            <textarea 
+                                id="issueDescription${suggestionCount}" 
+                                class="feedback-textarea" 
+                                name="issueDescription${suggestionCount}" 
+                                placeholder="Please enter the details."
+                                rows="4"
+                                maxlength="400"
+                                required
+                            ></textarea>
+                            <div class="char-counter" id="issueCounter${suggestionCount}">400 characters remaining</div>
+                        </div>
+                        
+                        <div class="feedback-group">
+                            <label for="suggestions${suggestionCount}" class="feedback-label feedback-required">Suggested Improvements</label>
+                            <textarea 
+                                id="suggestions${suggestionCount}" 
+                                class="feedback-textarea" 
+                                name="suggestions${suggestionCount}" 
+                                placeholder="Please enter the details."
+                                rows="4"
+                                maxlength="400"
+                                required
+                            ></textarea>
+                            <div class="char-counter" id="suggestionsCounter${suggestionCount}">400 characters remaining</div>
+                        </div>
+                    </div>
+                `;
+                
+                suggestionsContainer.insertAdjacentHTML('beforeend', suggestionHtml);
+                
+                // Animate the new suggestion
+                const newSuggestion = suggestionsContainer.lastElementChild;
+                setTimeout(() => {
+                    newSuggestion.classList.add('show');
+                }, 100);
+                
+                // Setup character counters for new textareas
+                setupCharCounter(`issueDescription${suggestionCount}`, `issueCounter${suggestionCount}`);
+                setupCharCounter(`suggestions${suggestionCount}`, `suggestionsCounter${suggestionCount}`);
+                
+                // Update button state
+                updateAddButtonState();
+                
+                // Scroll to new suggestion
+                newSuggestion.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }
+            
+            // Remove suggestion functionality
+            window.removeSuggestion = function(suggestionNumber) {
+                const suggestionElement = document.querySelector(`[data-suggestion="${suggestionNumber}"]`);
+                if (suggestionElement) {
+                    suggestionElement.style.opacity = '0';
+                    suggestionElement.style.transform = 'translateY(-20px)';
+                    
+                    setTimeout(() => {
+                        suggestionElement.remove();
+                        renumberSuggestions();
+                        updateAddButtonState();
+                    }, 300);
+                }
+            };
+            
+            // Renumber suggestions after removal
+            function renumberSuggestions() {
+                const suggestions = suggestionsContainer.querySelectorAll('.suggestion-section');
+                suggestionCount = suggestions.length;
+                
+                suggestions.forEach((suggestion, index) => {
+                    const newNumber = index + 1;
+                    suggestion.setAttribute('data-suggestion', newNumber);
+                    
+                    const title = suggestion.querySelector('.suggestion-title');
+                    title.textContent = `${getOrdinal(newNumber)} Suggested Improvement`;
+                    
+                    // Update IDs and names
+                    const issueTextarea = suggestion.querySelector('textarea[name^="issueDescription"]');
+                    const suggestionsTextarea = suggestion.querySelector('textarea[name^="suggestions"]');
+                    const issueCounter = suggestion.querySelector('.char-counter:first-of-type');
+                    const suggestionsCounter = suggestion.querySelector('.char-counter:last-of-type');
+                    const issueLabel = suggestion.querySelector('label[for^="issueDescription"]');
+                    const suggestionsLabel = suggestion.querySelector('label[for^="suggestions"]');
+                    const removeBtn = suggestion.querySelector('.remove-suggestion');
+                    
+                    if (issueTextarea) {
+                        issueTextarea.id = `issueDescription${newNumber}`;
+                        issueTextarea.name = `issueDescription${newNumber}`;
+                    }
+                    if (suggestionsTextarea) {
+                        suggestionsTextarea.id = `suggestions${newNumber}`;
+                        suggestionsTextarea.name = `suggestions${newNumber}`;
+                    }
+                    if (issueCounter) {
+                        issueCounter.id = `issueCounter${newNumber}`;
+                    }
+                    if (suggestionsCounter) {
+                        suggestionsCounter.id = `suggestionsCounter${newNumber}`;
+                    }
+                    if (issueLabel) {
+                        issueLabel.setAttribute('for', `issueDescription${newNumber}`);
+                    }
+                    if (suggestionsLabel) {
+                        suggestionsLabel.setAttribute('for', `suggestions${newNumber}`);
+                    }
+                    if (removeBtn && newNumber > 1) {
+                        removeBtn.setAttribute('onclick', `removeSuggestion(${newNumber})`);
+                    }
+                });
+            }
+            
+            // Update add button state
+            function updateAddButtonState() {
+                if (suggestionCount >= maxSuggestions) {
+                    addSuggestionBtn.disabled = true;
+                    addSuggestionBtn.innerHTML = '<span>✓</span> Maximum suggestions reached';
+                } else {
+                    addSuggestionBtn.disabled = false;
+                    addSuggestionBtn.innerHTML = '<span>+</span> Add Another Suggestion';
+                }
+            }
+            
+            // Get ordinal number
+            function getOrdinal(num) {
+                const ordinals = ['1st', '2nd', '3rd', '4th'];
+                return ordinals[num - 1] || `${num}th`;
+            }
+            
+            // Enhanced form validation
+            function validateForm() {
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+                let firstInvalidField = null;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.style.borderColor = 'var(--danger-color)';
+                        if (!firstInvalidField) {
+                            firstInvalidField = field;
+                        }
+                    } else {
+                        field.style.borderColor = 'var(--success-color)';
+                    }
+                });
+                
+                if (!isValid && firstInvalidField) {
+                    firstInvalidField.focus();
+                    firstInvalidField.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }
+                
+                return isValid;
+            }
+            
+           
+            // Enhanced form submission with API integration
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+        showError('Please fill in all required fields before submitting.');
+        return;
+    }
+    
+    // Add loading state
+    submitBtn.classList.add('feedback-loading');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+    
+    try {
+        // Extract form data
+        const formData = extractFormData();
+        
+        // Submit to API
+        const response = await fetch('http://localhost:3000/api/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Submission failed');
+        }
+
+        // Success! Show confirmation
+        console.log('✅ Feedback submitted successfully:', result);
+        showSuccess('Feedback submitted successfully!');
+        
+        // Hide form and show confirmation
+        setTimeout(() => {
+            form.style.opacity = '0';
+            form.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                form.classList.add('feedback-hidden');
+                confirmation.classList.remove('feedback-hidden');
+                
+                // Animate progress bar
+                setTimeout(() => {
+                    progressBar.style.width = '100%';
+                }, 500);
+                
+                // Smooth scroll to confirmation
+                confirmation.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 300);
+        }, 1000);
+
+    } catch (error) {
+        console.error('❌ Submission error:', error);
+        showError(error.message || 'Failed to submit feedback. Please try again.');
+    } finally {
+        // Reset button state
+        submitBtn.classList.remove('feedback-loading');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Feedback';
+    }
+});
+
+// Function to extract form data for API
+function extractFormData() {
+    const name = document.getElementById('formname').value.trim();
+    const email = document.getElementById('email').value.trim();
+    
+    const suggestions = [];
+    const suggestionSections = document.querySelectorAll('.suggestion-section');
+    
+    suggestionSections.forEach((section, index) => {
+        const issueTextarea = section.querySelector(`textarea[name^="issueDescription"]`);
+        const suggestionTextarea = section.querySelector(`textarea[name^="suggestions"]`);
+        
+        if (issueTextarea && suggestionTextarea && 
+            issueTextarea.value.trim() && suggestionTextarea.value.trim()) {
+            suggestions.push({
+                suggestionNumber: index + 1,
+                issueDescription: issueTextarea.value.trim(),
+                suggestedImprovement: suggestionTextarea.value.trim()
+            });
+        }
+    });
+
+    return {
+        name: name,
+        email: email || null,
+        suggestions: suggestions
+    };
+}
+            
+            // Add suggestion button event listener
+            addSuggestionBtn.addEventListener('click', addSuggestion);
+            
+            // Real-time validation feedback
+            const inputs = form.querySelectorAll('.feedback-input, .feedback-select, .feedback-textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.hasAttribute('required')) {
+                        if (this.value.trim()) {
+                            this.style.borderColor = 'var(--success-color)';
+                        } else {
+                            this.style.borderColor = 'var(--danger-color)';
+                        }
+                    }
+                });
+                
+                input.addEventListener('input', function() {
+                    if (this.style.borderColor === 'rgb(220, 53, 69)' && this.value.trim()) {
+                        this.style.borderColor = 'var(--success-color)';
+                    }
+                });
+            });
+            
+            // Setup initial character counters
+            setupCharCounter('issueDescription1', 'issueCounter1');
+            setupCharCounter('suggestions1', 'suggestionsCounter1');
+            
+            // Auto-resize textareas
+            const textareas = document.querySelectorAll('.feedback-textarea');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

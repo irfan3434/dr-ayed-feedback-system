@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhancement Dashboard - Dr. Ayed Alqarni Awards</title>
+    <style>
+        :root {
+            --primary-color: #1a4f72;
+            --secondary-color: #3a7cb4;
+            --accent-color: #e6af2e;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --border-radius: 0.5rem;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #e3f2fd 100%);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 2rem 0;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%); }
+            50% { transform: translateX(-50%) translateY(-50%); }
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header h1 {
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header-stats {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Controls */
+        .controls {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .filter-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+        
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid var(--gray-300);
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Feedback Grid */
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feedback-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: var(--transition);
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .feedback-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--gray-100) 0%, #f0f8ff 100%);
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .member-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        
+        .member-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .member-email {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+        
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-reviewed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-implemented {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--gray-600);
+        }
+        
+        .suggestion-count {
+            background: var(--secondary-color);
+            color: var(--white);
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+        }
+        
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .suggestion-item {
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .suggestion-header {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .suggestion-section {
+            margin-bottom: 0.75rem;
+        }
+        
+        .suggestion-label {
+            font-weight: 600;
+            color: var(--gray-800);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+        
+        .suggestion-text {
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background: var(--white);
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            border: 1px solid var(--gray-200);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray-600);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Error State */
+        .error-state {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .header-stats {
+                gap: 1rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filters {
+                justify-content: center;
+            }
+            
+            .feedback-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .member-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .header-content {
+                padding: 0 1rem;
+            }
+            
+            .suggestion-item {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>📊 AQEAW Enhancement Dashboard</h1>
+            <div class="header-stats" id="headerStats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalCount">-</span>
+                    <span class="stat-label">Total Suggestions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="pendingCount">-</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="controls">
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="filter-label">Status</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="reviewed">Reviewed</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Rejected</option>
+                        <option value="implemented">Implemented</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Sort By</label>
+                    <select class="filter-select" id="sortFilter">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name">Name A-Z</option>
+                        <option value="suggestions">Most Suggestions</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="refresh-btn" onclick="loadFeedback()">
+                <span id="refreshIcon">🔄</span>
+                Refresh Data
+            </button>
+        </div>
+
+        <div id="errorState" class="error-state" style="display: none;"></div>
+        
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Loading Suggestion data...</p>
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📝</div>
+            <h3>No Suggestions Found</h3>
+            <p>No Suggestion submissions match your current filters.</p>
+        </div>
+
+        <div id="feedbackGrid" class="feedback-grid"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let allFeedback = [];
+        let filteredFeedback = [];
+
+        // Load feedback data
+        async function loadFeedback() {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const refreshIcon = document.getElementById('refreshIcon');
+            
+            try {
+                showLoading(true);
+                hideError();
+                
+                refreshIcon.style.animation = 'spin 1s linear infinite';
+                
+                console.log('🔄 Loading feedback data...');
+                const response = await fetch(`${API_BASE}/feedback`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                allFeedback = result.data || [];
+                
+                console.log(`✅ Loaded ${allFeedback.length} feedback items`);
+                
+                updateStats();
+                applyFilters();
+                
+            } catch (error) {
+                console.error('❌ Error loading feedback:', error);
+                showError(`Failed to load feedback data: ${error.message}`);
+            } finally {
+                showLoading(false);
+                refreshIcon.style.animation = '';
+            }
+        }
+
+        // Show/hide loading state
+        function showLoading(show) {
+            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
+            document.getElementById('feedbackGrid').style.display = show ? 'none' : 'block';
+        }
+
+        // Show error state
+        function showError(message) {
+            const errorState = document.getElementById('errorState');
+            errorState.textContent = message;
+            errorState.style.display = 'block';
+        }
+
+        // Hide error state
+        function hideError() {
+            document.getElementById('errorState').style.display = 'none';
+        }
+
+        // Update header statistics
+        function updateStats() {
+            const totalCount = allFeedback.length;
+            const pendingCount = allFeedback.filter(f => f.status === 'pending').length;
+            
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('pendingCount').textContent = pendingCount;
+        }
+
+        // Apply filters and sorting
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sortFilter = document.getElementById('sortFilter').value;
+            
+            // Filter data
+            filteredFeedback = allFeedback.filter(feedback => {
+                if (statusFilter && feedback.status !== statusFilter) {
+                    return false;
+                }
+                return true;
+            });
+
+            // Sort data
+            filteredFeedback.sort((a, b) => {
+                switch (sortFilter) {
+                    case 'oldest':
+                        return new Date(a.submittedAt) - new Date(b.submittedAt);
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    case 'suggestions':
+                        return b.suggestions.length - a.suggestions.length;
+                    case 'newest':
+                    default:
+                        return new Date(b.submittedAt) - new Date(a.submittedAt);
+                }
+            });
+
+            renderFeedback();
+        }
+
+        // Render feedback cards
+        function renderFeedback() {
+            const feedbackGrid = document.getElementById('feedbackGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredFeedback.length === 0) {
+                feedbackGrid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            const feedbackHTML = filteredFeedback.map(feedback => `
+                <div class="feedback-card">
+                    <div class="card-header">
+                        <div class="member-info">
+                            <div>
+                                <div class="member-name">${escapeHtml(feedback.name)}</div>
+                                ${feedback.email ? `<div class="member-email">${escapeHtml(feedback.email)}</div>` : ''}
+                            </div>
+                            <span class="status-badge status-${feedback.status}">${feedback.status}</span>
+                        </div>
+                        
+                        <div class="card-meta">
+                            <span class="suggestion-count">${feedback.suggestions.length} suggestion${feedback.suggestions.length !== 1 ? 's' : ''}</span>
+                            <span>${formatDate(feedback.submittedAt)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="suggestions-list">
+                            ${feedback.suggestions.map((suggestion, index) => `
+                                <div class="suggestion-item">
+                                    <div class="suggestion-header">${getOrdinal(index + 1)} Suggestion</div>
+                                    
+                                    <div class="suggestion-section">
+                                        <span class="suggestion-label">Issue Description:</span>
+                                        <div class="suggestion-text">${escapeHtml(suggestion.issueDescription)}</div>
+                                    </div>
+                                    
+                                    <div class="suggestion-section">
+                                        <span class="suggestion-label">Suggested Improvement:</span>
+                                        <div class="suggestion-text">${escapeHtml(suggestion.suggestedImprovement)}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            feedbackGrid.innerHTML = feedbackHTML;
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getOrdinal(num) {
+            const ordinals = ['1st', '2nd', '3rd', '4th'];
+            return ordinals[num - 1] || `${num}th`;
+        }
+
+        // Event listeners
+        document.getElementById('statusFilter').addEventListener('change', applyFilters);
+        document.getElementById('sortFilter').addEventListener('change', applyFilters);
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Feedback Dashboard initialized');
+            loadFeedback();
+        });
+
+        // Auto-refresh every 30 seconds (optional)
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                loadFeedback();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
