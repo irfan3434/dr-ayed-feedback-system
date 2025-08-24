@@ -24,6 +24,8 @@ const corsOptions = {
       'http://127.0.0.1:3000',
       'http://localhost:5500',
       'http://127.0.0.1:5500',
+      'https://aqeaw.com',
+      'https://www.aqeaw.com',
       // Add your future frontend deployment URLs here
       'https://irfan3434.github.io',  // GitHub Pages
       'https://aqeaw.com/pages/feedbackform'  // Custom domain
