@@ -8,15 +8,15 @@ const suggestionSchema = new mongoose.Schema({
   issueDescription: {
     type: String,
     required: true,
-    maxlength: 200,
+    maxlength: 400,  // Changed from 200
     trim: true
-  },
-  suggestedImprovement: {
+},
+suggestedImprovement: {
     type: String,
     required: true,
-    maxlength: 200,
+    maxlength: 400,  // Changed from 200
     trim: true
-  }
+}
 });
 
 const feedbackSchema = new mongoose.Schema({
