@@ -10,14 +10,11 @@ A comprehensive feedback collection system for council members with real-time da
 - ✅ Responsive design
 - ✅ Production-ready backend API
 
-## Local Development
-1. Clone repository 
-2. Install dependencies: `cd backend && npm install`
-3. Set up .env file with MongoDB connection
-4. Start server: `npm run dev`
-5. Open frontend files in browser
+## Live Deployment
+- **Form:** https://aqeaw.com/pages/feedbackform
+- **Dashboard:** https://aqeaw.com/pages/feedback-dashboard
+- **API:** https://dr-ayed-feedback-api-irfan-3a0e5467b6ce.herokuapp.com
 
-## Live Demo
-- Frontend: [Coming Soon]
-- Dashboard: [Coming Soon]
-- API: [Coming Soon]
+## Development Files
+- `frontend/` - Standalone HTML versions for testing
+- Shopify integration via Liquid templates
