@@ -94,7 +94,7 @@ router.post('/', async (req, res) => {
 // GET /api/feedback - Get all feedback (for testing)
 router.get('/', async (req, res) => {
   try {
-    const feedback = await Feedback.find().sort({ submittedAt: -1 }).limit(10);
+    const feedback = await Feedback.find().sort({ submittedAt: -1 });
     res.json({
       message: 'Feedback retrieved successfully',
       data: feedback,
