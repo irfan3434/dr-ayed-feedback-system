@@ -28,7 +28,11 @@ const corsOptions = {
       'https://www.aqeaw.com',
       // Add your future frontend deployment URLs here
       'https://irfan3434.github.io',  // GitHub Pages
-      'https://aqeaw.com/pages/feedbackform'  // Custom domain
+      'https://aqeaw.com/pages/feedbackform',
+      'https://aqeaw.com/pages/admin-dashboard',
+      'https://aqeaw.com/pages/voting-dashboard',
+      'https://aqeaw.com/pages/dashboard' 
+      // Custom domain
     ];
     
     // Allow localhost and 127.0.0.1 during development
@@ -63,6 +67,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 const feedbackRoutes = require('./routes/feedback');
+const votingRoutes = require('./routes/voting');
+const adminRoutes = require('./routes/admin');
+
 
 // Basic route for testing
 app.get('/api/health', (req, res) => {
@@ -76,6 +83,9 @@ app.get('/api/health', (req, res) => {
 
 // Use routes
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/voting', votingRoutes);
+app.use('/api/admin', adminRoutes);
+
 // Database connection
 async function connectDB() {
   try {
@@ -96,6 +106,10 @@ async function startServer() {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+    console.log('Available endpoints:');
+    console.log(`Feedback Check: http://localhost:${PORT}/api/feedback`);
+    console.log(`Voting Check: http://localhost:${PORT}/api/voting`);
+    console.log(`Admin Check: http://localhost:${PORT}/api/admin`);
   });
 }
 

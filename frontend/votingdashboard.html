@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Dashboard - Dr. Ayed Alqarni Awards</title>
+    <style>
+        :root {
+            --primary-color: #1a4f72;
+            --secondary-color: #3a7cb4;
+            --accent-color: #e6af2e;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-800: #343a40;
+            --border-radius: 1rem;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+            --shadow-xl: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --glow-primary: rgba(58, 124, 180, 0.3);
+            --glow-success: rgba(40, 167, 69, 0.3);
+            --glow-danger: rgba(220, 53, 69, 0.3);
+            --gradient-primary: linear-gradient(135deg, #1a4f72 0%, #3a7cb4 100%);
+            --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
+            --gradient-voting: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            
+            /* Responsive variables */
+            --container-padding: clamp(1rem, 4vw, 2rem);
+            --card-padding: clamp(1.5rem, 3vw, 2rem);
+            --gap-size: clamp(1rem, 2vw, 2rem);
+            --header-padding: clamp(1.5rem, 4vw, 2.5rem);
+        }
+        
+        .vd-container * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .vd-container {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            font-size: clamp(14px, 2.5vw, 16px);
+        }
+        
+        .vd-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(230, 175, 46, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Header - Mobile First */
+        .vd-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            padding: var(--header-padding) 0;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .vd-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 3vw, 2rem);
+            text-align: center;
+            align-items: center;
+        }
+        
+        .vd-header h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 800;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        
+        .vd-header-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(1rem, 3vw, 3rem);
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .vd-stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: var(--transition);
+            min-width: 120px;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .vd-stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .vd-stat-number {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            font-weight: 900;
+            display: block;
+            background: linear-gradient(135deg, #fff 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .vd-stat-label {
+            font-size: clamp(0.75rem, 2vw, 0.9rem);
+            opacity: 0.9;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+        
+        /* Main Container */
+        .vd-main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--gap-size) var(--container-padding);
+        }
+        
+        /* Controls - Mobile Optimized */
+        .vd-controls {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: var(--card-padding);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--gap-size);
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap-size);
+            align-items: stretch;
+        }
+        
+        .vd-voting-info {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            padding: clamp(1rem, 3vw, 1.25rem) clamp(1.25rem, 3vw, 1.5rem);
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            border-left: 4px solid var(--accent-color);
+            width: 100%;
+            text-align: center;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+        
+        .vd-refresh-btn {
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+            backdrop-filter: blur(10px);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: clamp(0.875rem, 2.5vw, 1rem) clamp(1.5rem, 4vw, 2rem);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(0.875rem, 2.5vw, 1rem);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            min-height: 48px; /* Better touch target */
+            touch-action: manipulation;
+        }
+        
+        .vd-refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.2));
+        }
+        
+        .vd-refresh-btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Loading State */
+        .vd-loading {
+            text-align: center;
+            padding: clamp(2rem, 8vw, 4rem) var(--container-padding);
+            color: var(--white);
+        }
+        
+        .vd-spinner {
+            display: inline-block;
+            width: clamp(2rem, 6vw, 3rem);
+            height: clamp(2rem, 6vw, 3rem);
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid var(--white);
+            border-radius: 50%;
+            animation: vd-spin 1s linear infinite;
+            margin-bottom: var(--gap-size);
+        }
+        
+        @keyframes vd-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Voting Grid - Mobile First */
+        .vd-voting-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--gap-size);
+        }
+        
+        .vd-suggestion-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: var(--transition);
+            position: relative;
+            width: 100%;
+        }
+        
+        .vd-suggestion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+        }
+        
+        .vd-suggestion-card:hover {
+            transform: translateY(-4px) scale(1.005);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .vd-card-header {
+            background: linear-gradient(135deg, rgba(26, 79, 114, 0.1) 0%, rgba(58, 124, 180, 0.05) 100%);
+            padding: var(--card-padding);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .vd-suggestion-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+        }
+        
+        .vd-suggestion-id {
+            font-weight: 800;
+            color: var(--primary-color);
+            font-size: clamp(1rem, 3vw, 1.1rem);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            word-break: break-word;
+        }
+        
+        .vd-submitter-info {
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            color: var(--gray-600);
+            font-weight: 500;
+            background: rgba(58, 124, 180, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            align-self: flex-start;
+        }
+        
+        .vd-card-body {
+            padding: var(--card-padding);
+        }
+        
+        .vd-suggestion-content {
+            margin-bottom: var(--gap-size);
+        }
+        
+        .vd-content-section {
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+        
+        .vd-content-label {
+            font-weight: 700;
+            color: var(--gray-800);
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            margin-bottom: 0.75rem;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .vd-content-text {
+            color: var(--gray-700);
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            line-height: 1.7;
+            background: rgba(248, 249, 250, 0.8);
+            padding: clamp(1rem, 3vw, 1.25rem);
+            border-radius: 0.75rem;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .vd-content-text::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+            border-radius: 2px 0 0 2px;
+        }
+        
+        /* Voting Section - Mobile Optimized */
+        .vd-voting-section {
+            border-top: 2px solid rgba(0,0,0,0.05);
+            padding-top: var(--card-padding);
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(248,249,250,0.8) 100%);
+            margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 0 calc(-1 * var(--card-padding));
+            padding: var(--card-padding);
+        }
+        
+        .vd-vote-counts {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: var(--gap-size);
+            background: rgba(255, 255, 255, 0.7);
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vd-vote-counts::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--success-color), var(--danger-color));
+        }
+        
+        .vd-vote-stats-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .vd-vote-stat {
+            text-align: center;
+            flex: 1;
+            position: relative;
+            min-width: 0; /* Prevent flex items from overflowing */
+        }
+        
+        .vd-vote-number {
+            font-size: clamp(1.25rem, 4vw, 2rem);
+            font-weight: 900;
+            display: block;
+            margin-bottom: 0.5rem;
+            word-break: break-word;
+        }
+        
+        .vd-vote-number.vd-agree {
+            color: var(--success-color);
+            text-shadow: 0 2px 10px var(--glow-success);
+        }
+        
+        .vd-vote-number.vd-disagree {
+            color: var(--danger-color);
+            text-shadow: 0 2px 10px var(--glow-danger);
+        }
+        
+        .vd-vote-number.vd-total {
+            color: var(--primary-color);
+            text-shadow: 0 2px 10px var(--glow-primary);
+        }
+        
+        .vd-vote-label {
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            color: var(--gray-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+        
+        .vd-vote-percentage {
+            display: block;
+            font-size: clamp(0.7rem, 1.8vw, 0.75rem);
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+        
+        .vd-vote-bar {
+            width: 100%;
+            height: clamp(4px, 1vw, 6px);
+            background: rgba(0,0,0,0.1);
+            border-radius: 3px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        
+        .vd-vote-bar-fill {
+            height: 100%;
+            transition: width 1s ease-in-out;
+            border-radius: 3px;
+        }
+        
+        .vd-vote-bar-agree {
+            background: linear-gradient(135deg, var(--success-color), #20c997);
+        }
+        
+        .vd-vote-bar-disagree {
+            background: linear-gradient(135deg, var(--danger-color), #e74c3c);
+        }
+        
+        .vd-voting-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(1rem, 3vw, 1.5rem);
+            width: 100%;
+        }
+        
+        .vd-vote-btn {
+            width: 100%;
+            padding: clamp(1rem, 3vw, 1.25rem) clamp(1.5rem, 4vw, 2rem);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 700;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            min-height: 48px; /* Better touch target */
+            touch-action: manipulation;
+        }
+        
+        .vd-vote-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+        
+        .vd-vote-btn:hover::before {
+            left: 100%;
+        }
+        
+        .vd-vote-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+        
+        .vd-vote-btn.vd-agree {
+            background: linear-gradient(135deg, var(--success-color), #20c997);
+            color: var(--white);
+            box-shadow: 0 4px 20px var(--glow-success);
+        }
+        
+        .vd-vote-btn.vd-agree:hover:not(:disabled) {
+            background: linear-gradient(135deg, #218838, #1ba085);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--glow-success);
+        }
+        
+        .vd-vote-btn.vd-disagree {
+            background: linear-gradient(135deg, var(--danger-color), #e74c3c);
+            color: var(--white);
+            box-shadow: 0 4px 20px var(--glow-danger);
+        }
+        
+        .vd-vote-btn.vd-disagree:hover:not(:disabled) {
+            background: linear-gradient(135deg, #c82333, #c0392b);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--glow-danger);
+        }
+        
+        .vd-vote-btn:active {
+            transform: translateY(0);
+        }
+        
+        .vd-already-voted {
+            text-align: center;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            background: linear-gradient(135deg, #fff3cd, #fef3d7);
+            color: #856404;
+            border-radius: var(--border-radius);
+            font-weight: 700;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            border: 2px solid #ffeaa7;
+            position: relative;
+            line-height: 1.4;
+        }
+        
+        .vd-already-voted::before {
+            content: '✓';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--success-color);
+            color: var(--white);
+            border-radius: 50%;
+            width: clamp(25px, 5vw, 30px);
+            height: clamp(25px, 5vw, 30px);
+            font-size: clamp(14px, 3vw, 16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+        }
+        
+        /* Empty State */
+        .vd-empty-state {
+            text-align: center;
+            padding: clamp(3rem, 8vw, 5rem) var(--container-padding);
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .vd-empty-icon {
+            font-size: clamp(3rem, 8vw, 4rem);
+            margin-bottom: var(--gap-size);
+            opacity: 0.7;
+        }
+        
+        .vd-empty-state h3 {
+            font-size: clamp(1.25rem, 4vw, 1.8rem);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .vd-empty-state p {
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+        
+        /* Error State */
+        .vd-error-state {
+            background: rgba(220, 53, 69, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #721c24;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: var(--gap-size);
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            line-height: 1.4;
+        }
+        
+        /* Success Animation */
+        @keyframes vd-voteSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .vd-vote-success {
+            animation: vd-voteSuccess 0.6s ease-in-out;
+        }
+        
+        /* Scroll animations */
+        @keyframes vd-fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .vd-suggestion-card {
+            animation: vd-fadeInUp 0.6s ease-out;
+        }
+        
+        .vd-suggestion-card:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+        
+        .vd-suggestion-card:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+        
+        /* Enhanced Mobile Breakpoints */
+        
+        /* Small Mobile Devices (320px - 480px) */
+        @media (max-width: 480px) {
+            :root {
+                --container-padding: 1rem;
+                --card-padding: 1rem;
+                --gap-size: 1rem;
+                --header-padding: 1rem;
+                --border-radius: 0.75rem;
+            }
+            
+            .vd-container {
+                font-size: 14px;
+            }
+            
+            .vd-header {
+                padding: var(--header-padding) 0;
+            }
+            
+            .vd-header-stats {
+                gap: 0.75rem;
+            }
+            
+            .vd-stat-item {
+                min-width: 100px;
+                padding: 0.75rem;
+            }
+            
+            .vd-suggestion-meta {
+                gap: 0.75rem;
+            }
+            
+            .vd-vote-counts {
+                gap: 0.75rem;
+                padding: 1rem;
+            }
+            
+            .vd-voting-buttons {
+                gap: 0.75rem;
+            }
+            
+            .vd-vote-btn {
+                min-height: 44px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* Medium Mobile Devices (481px - 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .vd-header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+            
+            .vd-header-stats {
+                gap: 1.5rem;
+            }
+            
+            .vd-controls {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .vd-voting-info {
+                text-align: left;
+                flex: 1;
+            }
+            
+            .vd-refresh-btn {
+                width: auto;
+                min-width: 160px;
+            }
+            
+            .vd-voting-buttons {
+                flex-direction: row;
+                gap: 1rem;
+            }
+            
+            .vd-vote-counts {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+        
+        /* Tablet Devices (769px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .vd-voting-grid {
+                grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            }
+            
+            .vd-header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+            
+            .vd-controls {
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .vd-voting-info {
+                text-align: left;
+            }
+        }
+        
+        /* Desktop Devices (1025px and above) */
+        @media (min-width: 1025px) {
+            .vd-voting-grid {
+                grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            }
+            
+            .vd-header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+            
+            .vd-controls {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .vd-voting-info {
+                text-align: left;
+                min-width: 300px;
+            }
+            
+            .vd-refresh-btn {
+                width: auto;
+            }
+            
+            .vd-suggestion-meta {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .vd-voting-buttons {
+                flex-direction: row;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .vd-vote-btn {
+                max-width: 200px;
+            }
+            
+            .vd-vote-counts {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+        
+        /* Large Desktop (1200px and above) */
+        @media (min-width: 1200px) {
+            .vd-suggestion-card:hover {
+                transform: translateY(-8px) scale(1.02);
+            }
+        }
+        
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .vd-container {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .vd-header {
+                padding: 1rem 0;
+            }
+            
+            .vd-main-container {
+                padding: 1rem var(--container-padding);
+            }
+            
+            .vd-empty-state,
+            .vd-loading {
+                padding: 2rem var(--container-padding);
+            }
+        }
+        
+        /* Accessibility Enhancements */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .vd-suggestion-card:hover {
+                transform: none;
+            }
+            
+            .vd-vote-btn:hover:not(:disabled) {
+                transform: none;
+            }
+        }
+        
+        /* Focus visible for better accessibility */
+        .vd-vote-btn:focus-visible,
+        .vd-refresh-btn:focus-visible {
+            outline: 2px solid var(--white);
+            outline-offset: 2px;
+        }
+        
+        /* Touch device optimizations */
+        @media (pointer: coarse) {
+            .vd-vote-btn,
+            .vd-refresh-btn {
+                min-height: 48px;
+            }
+            
+            .vd-stat-item:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="vd-container">
+        <header class="vd-header">
+            <div class="vd-header-content">
+                <h1>🗳️ Council Voting Dashboard</h1>
+                <div class="vd-header-stats" id="vd-headerStats">
+                    <div class="vd-stat-item">
+                        <span class="vd-stat-number" id="vd-totalSuggestions">-</span>
+                        <span class="vd-stat-label">Active Suggestions</span>
+                    </div>
+                    <div class="vd-stat-item">
+                        <span class="vd-stat-number" id="vd-totalVotes">-</span>
+                        <span class="vd-stat-label">Total Votes Cast</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="vd-main-container">
+            <div class="vd-controls">
+                <div class="vd-voting-info">
+                    <strong>📋 Voting Instructions:</strong> Review each suggestion carefully and vote by clicking "Agree" or "Disagree". You can only vote once per suggestion. Your voice matters in shaping the future of our council!
+                </div>
+                
+                <button class="vd-refresh-btn" onclick="vdLoadSuggestions()">
+                    <span id="vd-refreshIcon">🔄</span>
+                    Refresh Data
+                </button>
+            </div>
+
+            <div id="vd-errorState" class="vd-error-state" style="display: none;"></div>
+            
+            <div id="vd-loadingState" class="vd-loading">
+                <div class="vd-spinner"></div>
+                <p style="font-size: 1.2rem; font-weight: 600;">Loading suggestions for voting...</p>
+            </div>
+
+            <div id="vd-emptyState" class="vd-empty-state" style="display: none;">
+                <div class="vd-empty-icon">🗳️</div>
+                <h3>No Active Suggestions</h3>
+                <p>There are currently no suggestions available for voting. Check back soon for new proposals to review!</p>
+            </div>
+
+            <div id="vd-votingGrid" class="vd-voting-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const VD_API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://your-production-domain.com/api';
+        let vdAllSuggestions = [];
+        let vdUserVotes = {};
+
+        // Generate simple fingerprint for localStorage
+        function vdGenerateClientId() {
+            let clientId = localStorage.getItem('vdVotingClientId');
+            if (!clientId) {
+                clientId = 'vd_voter_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('vdVotingClientId', clientId);
+            }
+            return clientId;
+        }
+
+        // Load voting data from localStorage
+        function vdLoadLocalVotes() {
+            const savedVotes = localStorage.getItem('vdUserVotes');
+            if (savedVotes) {
+                vdUserVotes = JSON.parse(savedVotes);
+            }
+        }
+
+        // Save vote to localStorage
+        function vdSaveLocalVote(suggestionId, vote) {
+            vdUserVotes[suggestionId] = vote;
+            localStorage.setItem('vdUserVotes', JSON.stringify(vdUserVotes));
+        }
+
+        // Calculate vote percentages
+        function vdCalculateVotePercentages(votes) {
+            const total = votes.total;
+            if (total === 0) return { agree: 0, disagree: 0 };
+            
+            return {
+                agree: Math.round((votes.agree / total) * 100),
+                disagree: Math.round((votes.disagree / total) * 100)
+            };
+        }
+
+        // Load suggestions for voting
+        async function vdLoadSuggestions() {
+            const loadingState = document.getElementById('vd-loadingState');
+            const errorState = document.getElementById('vd-errorState');
+            const refreshIcon = document.getElementById('vd-refreshIcon');
+            
+            try {
+                vdShowLoading(true);
+                vdHideError();
+                
+                refreshIcon.style.animation = 'vd-spin 1s linear infinite';
+                
+                console.log('🔄 Loading suggestions for voting...');
+                const response = await fetch(`${VD_API_BASE}/voting/suggestions`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                vdAllSuggestions = result.data || [];
+                
+                console.log(`✅ Loaded ${vdAllSuggestions.length} suggestions`);
+                
+                vdUpdateStats();
+                vdRenderSuggestions();
+                
+            } catch (error) {
+                console.error('❌ Error loading suggestions:', error);
+                vdShowError(`Failed to load suggestions: ${error.message}`);
+            } finally {
+                vdShowLoading(false);
+                refreshIcon.style.animation = '';
+            }
+        }
+
+        // Show/hide loading state
+        function vdShowLoading(show) {
+            document.getElementById('vd-loadingState').style.display = show ? 'block' : 'none';
+            document.getElementById('vd-votingGrid').style.display = show ? 'none' : 'grid';
+        }
+
+        // Show error state
+        function vdShowError(message) {
+            const errorState = document.getElementById('vd-errorState');
+            errorState.textContent = '❌ ' + message;
+            errorState.style.display = 'block';
+        }
+
+        // Hide error state
+        function vdHideError() {
+            document.getElementById('vd-errorState').style.display = 'none';
+        }
+
+        // Update header statistics with animation
+        function vdUpdateStats() {
+            const totalSuggestions = vdAllSuggestions.length;
+            const totalVotes = vdAllSuggestions.reduce((sum, s) => sum + s.votes.total, 0);
+            
+            // Animate numbers
+            vdAnimateNumber('vd-totalSuggestions', totalSuggestions);
+            vdAnimateNumber('vd-totalVotes', totalVotes);
+        }
+
+        // Animate number counting
+        function vdAnimateNumber(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            const currentValue = parseInt(element.textContent) || 0;
+            const increment = Math.ceil((targetValue - currentValue) / 20);
+            
+            if (currentValue < targetValue) {
+                element.textContent = Math.min(currentValue + increment, targetValue);
+                setTimeout(() => vdAnimateNumber(elementId, targetValue), 50);
+            } else {
+                element.textContent = targetValue;
+            }
+        }
+
+        // Render voting interface with enhanced visuals
+        function vdRenderSuggestions() {
+            const votingGrid = document.getElementById('vd-votingGrid');
+            const emptyState = document.getElementById('vd-emptyState');
+            
+            if (vdAllSuggestions.length === 0) {
+                votingGrid.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            const suggestionsHTML = vdAllSuggestions.map((suggestion, index) => {
+                const userVote = vdUserVotes[suggestion.suggestionId];
+                const hasVoted = !!userVote;
+                const percentages = vdCalculateVotePercentages(suggestion.votes);
+                
+                return `
+                    <div class="vd-suggestion-card" style="animation-delay: ${index * 0.1}s">
+                        <div class="vd-card-header">
+                            <div class="vd-suggestion-meta">
+                                <span class="vd-suggestion-id">Suggestion #${index + 1}</span>
+                                <span class="vd-submitter-info">by ${vdEscapeHtml(suggestion.submitter)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="vd-card-body">
+                            <div class="vd-suggestion-content">
+                                <div class="vd-content-section">
+                                    <span class="vd-content-label">Issue Description</span>
+                                    <div class="vd-content-text">${vdEscapeHtml(suggestion.issueDescription)}</div>
+                                </div>
+                                
+                                <div class="vd-content-section">
+                                    <span class="vd-content-label">Suggested Improvement</span>
+                                    <div class="vd-content-text">${vdEscapeHtml(suggestion.suggestedImprovement)}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="vd-voting-section">
+                                <div class="vd-vote-counts">
+                                    <div class="vd-vote-stat">
+                                        <span class="vd-vote-number vd-agree">${suggestion.votes.agree}</span>
+                                        <span class="vd-vote-label">Agree</span>
+                                        <span class="vd-vote-percentage">${percentages.agree}%</span>
+                                        <div class="vd-vote-bar">
+                                            <div class="vd-vote-bar-fill vd-vote-bar-agree" style="width: ${percentages.agree}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="vd-vote-stat">
+                                        <span class="vd-vote-number vd-disagree">${suggestion.votes.disagree}</span>
+                                        <span class="vd-vote-label">Disagree</span>
+                                        <span class="vd-vote-percentage">${percentages.disagree}%</span>
+                                        <div class="vd-vote-bar">
+                                            <div class="vd-vote-bar-fill vd-vote-bar-disagree" style="width: ${percentages.disagree}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="vd-vote-stat">
+                                        <span class="vd-vote-number vd-total">${suggestion.votes.total}</span>
+                                        <span class="vd-vote-label">Total Votes</span>
+                                        <span class="vd-vote-percentage">100%</span>
+                                    </div>
+                                </div>
+                                
+                                ${hasVoted ? `
+                                    <div class="vd-already-voted">
+                                        You voted: <strong>${userVote.toUpperCase()}</strong> ✓
+                                    </div>
+                                ` : `
+                                    <div class="vd-voting-buttons">
+                                        <button class="vd-vote-btn vd-agree" onclick="vdSubmitVote('${suggestion.suggestionId}', 'agree', this)">
+                                            👍 Agree
+                                        </button>
+                                        <button class="vd-vote-btn vd-disagree" onclick="vdSubmitVote('${suggestion.suggestionId}', 'disagree', this)">
+                                            👎 Disagree
+                                        </button>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            votingGrid.innerHTML = suggestionsHTML;
+        }
+
+        // Submit vote with enhanced feedback
+        async function vdSubmitVote(suggestionId, vote, buttonElement) {
+            try {
+                // Disable buttons and show loading state
+                const votingButtons = buttonElement.parentElement;
+                const buttons = votingButtons.querySelectorAll('.vd-vote-btn');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.innerHTML = btn.innerHTML.replace('👍', '⏳').replace('👎', '⏳');
+                });
+                
+                console.log(`Submitting vote: ${vote} for suggestion ${suggestionId}`);
+                
+                const response = await fetch(`${VD_API_BASE}/voting/suggestions/${suggestionId}/vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ vote })
+                });
+
+                const result = await response.json();
+
+                if (response.status === 409) {
+                    // Already voted
+                    vdShowVoteError('You have already voted on this suggestion!');
+                    vdSaveLocalVote(suggestionId, result.existingVote);
+                    setTimeout(() => vdLoadSuggestions(), 1000);
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Vote submission failed');
+                }
+
+                // Success - show celebration animation
+                const card = buttonElement.closest('.vd-suggestion-card');
+                card.classList.add('vd-vote-success');
+                
+                console.log('✅ Vote submitted successfully:', result);
+                vdSaveLocalVote(suggestionId, vote);
+                
+                // Show success message
+                vdShowVoteSuccess(`Vote recorded: ${vote.toUpperCase()}! Thank you for participating.`);
+                
+                // Refresh suggestions after a short delay
+                setTimeout(() => {
+                    vdLoadSuggestions();
+                }, 1500);
+                
+            } catch (error) {
+                console.error('❌ Vote submission error:', error);
+                vdShowVoteError('Failed to submit vote: ' + error.message);
+                
+                // Re-enable buttons
+                setTimeout(() => {
+                    vdLoadSuggestions();
+                }, 2000);
+            }
+        }
+
+        // Show vote success message
+        function vdShowVoteSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'vd-toast-notification vd-toast-success';
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 1rem;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            successDiv.textContent = '✅ ' + message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => successDiv.style.transform = 'translateX(0)', 100);
+            setTimeout(() => successDiv.style.transform = 'translateX(400px)', 3000);
+            setTimeout(() => successDiv.remove(), 3500);
+        }
+
+        // Show vote error message
+        function vdShowVoteError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'vd-toast-notification vd-toast-error';
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #dc3545, #e74c3c);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 1rem;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            errorDiv.textContent = '❌ ' + message;
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => errorDiv.style.transform = 'translateX(0)', 100);
+            setTimeout(() => errorDiv.style.transform = 'translateX(400px)', 4000);
+            setTimeout(() => errorDiv.remove(), 4500);
+        }
+
+        // Utility functions
+        function vdEscapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize voting dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🗳️ Enhanced Voting Dashboard initialized');
+            vdGenerateClientId();
+            vdLoadLocalVotes();
+            vdLoadSuggestions();
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            if (document.visibilityState === 'visible') {
+                vdLoadSuggestions();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

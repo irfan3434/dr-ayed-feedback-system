@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Dr. Ayed Alqarni Awards</title>
+    <style>
+        :root {
+            --primary-color: #1a4f72;
+            --secondary-color: #3a7cb4;
+            --accent-color: #e6af2e;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --info-color: #17a2b8;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --border-radius: 0.5rem;
+            --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            --shadow-md: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--light-bg) 0%, #e3f2fd 100%);
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .refresh-all-btn {
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        
+        .refresh-all-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Tab Navigation */
+        .tab-nav {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .tab-btn:not(.active):hover {
+            background: var(--gray-100);
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+            background: var(--gray-100);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .btn-primary { background: var(--primary-color); color: var(--white); }
+        .btn-success { background: var(--success-color); color: var(--white); }
+        .btn-warning { background: var(--warning-color); color: var(--gray-800); }
+        .btn-danger { background: var(--danger-color); color: var(--white); }
+        .btn-info { background: var(--info-color); color: var(--white); }
+        .btn-secondary { background: var(--gray-600); color: var(--white); }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        /* Status badges */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+        }
+        
+        .badge-pending { background: var(--warning-color); color: var(--gray-800); }
+        .badge-reviewed { background: var(--info-color); color: var(--white); }
+        .badge-approved { background: var(--success-color); color: var(--white); }
+        .badge-rejected { background: var(--danger-color); color: var(--white); }
+        .badge-draft { background: var(--gray-600); color: var(--white); }
+        .badge-active { background: var(--success-color); color: var(--white); }
+        .badge-closed { background: var(--gray-600); color: var(--white); }
+        
+        /* Form elements */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(58, 124, 180, 0.15);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Loading and empty states */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid var(--gray-300);
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Feedback display */
+        .feedback-item {
+            border-left: 4px solid var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .feedback-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .feedback-submitter {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .feedback-date {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        .suggestion-list {
+            margin-top: 1rem;
+        }
+        
+        .suggestion-item {
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .suggestion-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .suggestion-number {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+        
+        .suggestion-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .suggestion-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .suggestion-text strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--gray-800);
+        }
+        
+        /* Vote display */
+        .vote-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+        }
+        
+        .vote-stat {
+            text-align: center;
+        }
+        
+        .vote-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .vote-label {
+            font-size: 0.8rem;
+            color: var(--gray-600);
+        }
+        
+        .vote-agree { color: var(--success-color); }
+        .vote-disagree { color: var(--danger-color); }
+        .vote-total { color: var(--primary-color); }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-600);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .feedback-meta,
+            .suggestion-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .vote-stats {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>🛠️ Admin Dashboard - Dr. Ayed Alqarni Awards</h1>
+            <div class="header-actions">
+                <button class="refresh-all-btn" onclick="refreshAllData()">
+                    🔄 Refresh All
+                </button>
+                <button class="refresh-all-btn" onclick="resetAllData()" style="background: rgba(220, 53, 69, 0.8); margin-left: 0.5rem;">
+                    🗑️ Reset Data
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tab-nav">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab('feedback')">
+                    📝 Review Feedback
+                </button>
+                <button class="tab-btn" onclick="switchTab('curated')">
+                    ✏️ Manage Suggestions
+                </button>
+            </div>
+            
+            <!-- Feedback Review Tab -->
+            <div class="tab-content active" id="feedbackTab">
+                <div id="feedbackLoading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading feedback submissions...</p>
+                </div>
+                
+                <div id="feedbackEmpty" class="empty-state" style="display: none;">
+                    <div class="empty-icon">📝</div>
+                    <h3>No Feedback Submissions</h3>
+                    <p>No feedback has been submitted yet.</p>
+                </div>
+                
+                <div id="feedbackContainer"></div>
+            </div>
+            
+            <!-- Curated Suggestions Tab -->
+            <div class="tab-content" id="curatedTab">
+                <div style="margin-bottom: 2rem;">
+                    <button class="btn btn-primary" onclick="openCreateSuggestionModal()">
+                        ➕ Create New Suggestion
+                    </button>
+                </div>
+                
+                <div id="curatedLoading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading voting suggestions...</p>
+                </div>
+                
+                <div id="curatedEmpty" class="empty-state" style="display: none;">
+                    <div class="empty-icon">✏️</div>
+                    <h3>No Curated Suggestions</h3>
+                    <p>No suggestions have been created for voting yet.</p>
+                </div>
+                
+                <div id="curatedContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Suggestion Modal -->
+    <div class="modal" id="suggestionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Create New Suggestion</h3>
+                <button class="modal-close" onclick="closeSuggestionModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="suggestionForm">
+                    <div class="form-group">
+                        <label class="form-label">Title *</label>
+                        <input type="text" class="form-control" id="suggestionTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Issue Description *</label>
+                        <textarea class="form-control" id="issueDescription" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Suggested Improvement *</label>
+                        <textarea class="form-control" id="suggestedImprovement" rows="4" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Submitter Name *</label>
+                        <input type="text" class="form-control" id="submitterName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Submitter Email</label>
+                        <input type="email" class="form-control" id="submitterEmail">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeSuggestionModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveSuggestionBtn" onclick="saveSuggestion()">
+                    Save Suggestion
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:3000/api'
+            : 'https://your-production-domain.com/api';
+
+        let currentEditId = null;
+        let feedbackData = [];
+        let curatedData = [];
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data for the tab
+            switch(tabName) {
+                case 'feedback':
+                    loadFeedback();
+                    break;
+                case 'curated':
+                    loadCuratedSuggestions();
+                    break;
+            }
+        }
+
+        // Load feedback submissions
+        async function loadFeedback() {
+            const loading = document.getElementById('feedbackLoading');
+            const empty = document.getElementById('feedbackEmpty');
+            const container = document.getElementById('feedbackContainer');
+            
+            try {
+                loading.style.display = 'block';
+                empty.style.display = 'none';
+                container.innerHTML = '';
+                
+                const response = await fetch(`${API_BASE}/feedback`);
+                const result = await response.json();
+                
+                feedbackData = result.data || [];
+                
+                if (feedbackData.length === 0) {
+                    empty.style.display = 'block';
+                } else {
+                    renderFeedback();
+                }
+                
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                container.innerHTML = `<div class="card"><div class="card-body">Error loading feedback: ${error.message}</div></div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Render feedback items
+        function renderFeedback() {
+            const container = document.getElementById('feedbackContainer');
+            
+            const feedbackHTML = feedbackData.map((feedback, feedbackIndex) => `
+                <div class="card feedback-item">
+                    <div class="card-header">
+                        <div class="feedback-meta">
+                            <span class="feedback-submitter">#${feedbackIndex + 1} - ${escapeHtml(feedback.name)}</span>
+                            <div>
+                                <span class="badge badge-${feedback.status}">${feedback.status}</span>
+                                <span class="feedback-date">${new Date(feedback.submittedAt).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        ${feedback.email ? `<p><strong>Email:</strong> ${escapeHtml(feedback.email)}</p>` : ''}
+                        
+                        <div class="suggestion-list">
+                            ${feedback.suggestions.map((suggestion, index) => `
+                                <div class="suggestion-item">
+                                    <div class="suggestion-header">
+                                        <span class="suggestion-number">#${feedbackIndex + 1}.${suggestion.suggestionNumber} - Suggestion ${suggestion.suggestionNumber}</span>
+                                        <div class="suggestion-actions">
+                                            <button class="btn btn-sm btn-info" onclick="curateFromFeedback('${feedback._id}', ${suggestion.suggestionNumber})">
+                                                ✏️ Curate
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="suggestion-text">
+                                        <strong>Issue:</strong>
+                                        ${escapeHtml(suggestion.issueDescription)}
+                                    </div>
+                                    <div class="suggestion-text">
+                                        <strong>Improvement:</strong>
+                                        ${escapeHtml(suggestion.suggestedImprovement)}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div style="margin-top: 1rem;">
+                            <select class="form-control" style="width: auto; display: inline-block; margin-right: 1rem;" onchange="updateFeedbackStatus('${feedback._id}', this.value)">
+                                <option value="pending" ${feedback.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                <option value="approved" ${feedback.status === 'approved' ? 'selected' : ''}>Approved</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = feedbackHTML;
+        }
+
+        // Load curated suggestions
+        async function loadCuratedSuggestions() {
+            const loading = document.getElementById('curatedLoading');
+            const empty = document.getElementById('curatedEmpty');
+            const container = document.getElementById('curatedContainer');
+            
+            try {
+                loading.style.display = 'block';
+                empty.style.display = 'none';
+                container.innerHTML = '';
+                
+                const response = await fetch(`${API_BASE}/admin/suggestions`);
+                const result = await response.json();
+                
+                curatedData = result.data || [];
+                
+                if (curatedData.length === 0) {
+                    empty.style.display = 'block';
+                } else {
+                    renderCuratedSuggestions();
+                }
+                
+            } catch (error) {
+                console.error('Error loading curated suggestions:', error);
+                container.innerHTML = `<div class="card"><div class="card-body">Error loading suggestions: ${error.message}</div></div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Render curated suggestions
+        function renderCuratedSuggestions() {
+            const container = document.getElementById('curatedContainer');
+            
+            const suggestionsHTML = curatedData.map((suggestion, index) => `
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">#${index + 1} - ${escapeHtml(suggestion.title)}</h4>
+                        <div>
+                            <span class="badge badge-${suggestion.status}">${suggestion.status}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <p><strong>Submitter:</strong> ${escapeHtml(suggestion.submitterName)}</p>
+                        ${suggestion.submitterEmail ? `<p><strong>Email:</strong> ${escapeHtml(suggestion.submitterEmail)}</p>` : ''}
+                        
+                        <div class="form-group">
+                            <strong>Issue Description:</strong>
+                            <div style="background: var(--gray-100); padding: 0.75rem; border-radius: var(--border-radius); margin-top: 0.5rem;">
+                                ${escapeHtml(suggestion.issueDescription)}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <strong>Suggested Improvement:</strong>
+                            <div style="background: var(--gray-100); padding: 0.75rem; border-radius: var(--border-radius); margin-top: 0.5rem;">
+                                ${escapeHtml(suggestion.suggestedImprovement)}
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <button class="btn btn-info btn-sm" onclick="editSuggestion('${suggestion._id}')">
+                                ✏️ Edit
+                            </button>
+                            
+                            ${suggestion.status === 'draft' ? `
+                                <button class="btn btn-success btn-sm" onclick="activateSuggestion('${suggestion._id}')">
+                                    🎯 Activate for Voting
+                                </button>
+                            ` : ''}
+                            
+                            ${suggestion.status === 'active' ? `
+                                <button class="btn btn-warning btn-sm" onclick="closeSuggestionVoting('${suggestion._id}')">
+                                    🔒 Close Voting
+                                </button>
+                            ` : ''}
+                            
+                            <button class="btn btn-danger btn-sm" onclick="deleteSuggestion('${suggestion._id}')">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                        
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray-600);">
+                            Created: ${new Date(suggestion.createdAt).toLocaleDateString()}
+                        </p>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = suggestionsHTML;
+        }
+
+        // Load statistics
+        async function loadStatistics() {
+            const loading = document.getElementById('statisticsLoading');
+            const container = document.getElementById('statisticsContainer');
+            
+            try {
+                loading.style.display = 'block';
+                container.innerHTML = '';
+                
+                // Load feedback stats
+                const feedbackResponse = await fetch(`${API_BASE}/feedback`);
+                const feedbackResult = await feedbackResponse.json();
+                const feedbacks = feedbackResult.data || [];
+                
+                // Load suggestions stats  
+                const suggestionsResponse = await fetch(`${API_BASE}/admin/suggestions`);
+                const suggestionsResult = await suggestionsResponse.json();
+                const suggestions = suggestionsResult.data || [];
+                
+                // Load voting stats
+                const votingResponse = await fetch(`${API_BASE}/voting/suggestions`);
+                const votingResult = await votingResponse.json();
+                const votingSuggestions = votingResult.data || [];
+                
+                // Calculate statistics
+                const feedbackStats = {
+                    total: feedbacks.length,
+                    pending: feedbacks.filter(f => f.status === 'pending').length,
+                    reviewed: feedbacks.filter(f => f.status === 'reviewed').length,
+                    approved: feedbacks.filter(f => f.status === 'approved').length
+                };
+                
+                const suggestionStats = {
+                    total: suggestions.length,
+                    draft: suggestions.filter(s => s.status === 'draft').length,
+                    active: suggestions.filter(s => s.status === 'active').length,
+                    closed: suggestions.filter(s => s.status === 'closed').length
+                };
+                
+                const votingStats = votingSuggestions.reduce((acc, s) => ({
+                    totalVotes: acc.totalVotes + s.votes.total,
+                    agreeVotes: acc.agreeVotes + s.votes.agree,
+                    disagreeVotes: acc.disagreeVotes + s.votes.disagree
+                }), { totalVotes: 0, agreeVotes: 0, disagreeVotes: 0 });
+                
+                renderStatistics(feedbackStats, suggestionStats, votingStats);
+                
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+                container.innerHTML = `<div class="card"><div class="card-body">Error loading statistics: ${error.message}</div></div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Render statistics
+        function renderStatistics(feedbackStats, suggestionStats, votingStats) {
+            const container = document.getElementById('statisticsContainer');
+            
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">📝 Feedback Submissions</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="vote-stats" style="margin-top: 0;">
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-total">${feedbackStats.total}</span>
+                                    <span class="vote-label">Total</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number" style="color: var(--warning-color);">${feedbackStats.pending}</span>
+                                    <span class="vote-label">Pending</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number" style="color: var(--info-color);">${feedbackStats.reviewed}</span>
+                                    <span class="vote-label">Reviewed</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-agree">${feedbackStats.approved}</span>
+                                    <span class="vote-label">Approved</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">✏️ Curated Suggestions</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="vote-stats" style="margin-top: 0;">
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-total">${suggestionStats.total}</span>
+                                    <span class="vote-label">Total</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number" style="color: var(--gray-600);">${suggestionStats.draft}</span>
+                                    <span class="vote-label">Draft</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-agree">${suggestionStats.active}</span>
+                                    <span class="vote-label">Active</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-disagree">${suggestionStats.closed}</span>
+                                    <span class="vote-label">Closed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">🗳️ Voting Activity</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="vote-stats" style="margin-top: 0;">
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-total">${votingStats.totalVotes}</span>
+                                    <span class="vote-label">Total Votes</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-agree">${votingStats.agreeVotes}</span>
+                                    <span class="vote-label">Agree</span>
+                                </div>
+                                <div class="vote-stat">
+                                    <span class="vote-number vote-disagree">${votingStats.disagreeVotes}</span>
+                                    <span class="vote-label">Disagree</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Curate suggestion from feedback
+        function curateFromFeedback(feedbackId, suggestionNumber) {
+            const feedback = feedbackData.find(f => f._id === feedbackId);
+            if (!feedback) return;
+            
+            const suggestion = feedback.suggestions.find(s => s.suggestionNumber === suggestionNumber);
+            if (!suggestion) return;
+            
+            // Open modal with pre-filled data
+            openCreateSuggestionModal();
+            document.getElementById('modalTitle').textContent = 'Curate Suggestion from Feedback';
+            document.getElementById('suggestionTitle').value = `Improvement Suggestion ${suggestionNumber} from ${feedback.name}`;
+            document.getElementById('issueDescription').value = suggestion.issueDescription;
+            document.getElementById('suggestedImprovement').value = suggestion.suggestedImprovement;
+            document.getElementById('submitterName').value = feedback.name;
+            document.getElementById('submitterEmail').value = feedback.email || '';
+        }
+
+        // Modal functions
+        function openCreateSuggestionModal() {
+            document.getElementById('suggestionModal').classList.add('active');
+            document.getElementById('modalTitle').textContent = 'Create New Suggestion';
+            document.getElementById('suggestionForm').reset();
+            currentEditId = null;
+        }
+
+        function closeSuggestionModal() {
+            document.getElementById('suggestionModal').classList.remove('active');
+            currentEditId = null;
+        }
+
+        function editSuggestion(id) {
+            const suggestion = curatedData.find(s => s._id === id);
+            if (!suggestion) return;
+            
+            currentEditId = id;
+            openCreateSuggestionModal();
+            document.getElementById('modalTitle').textContent = 'Edit Suggestion';
+            document.getElementById('suggestionTitle').value = suggestion.title;
+            document.getElementById('issueDescription').value = suggestion.issueDescription;
+            document.getElementById('suggestedImprovement').value = suggestion.suggestedImprovement;
+            document.getElementById('submitterName').value = suggestion.submitterName;
+            document.getElementById('submitterEmail').value = suggestion.submitterEmail || '';
+        }
+
+        // Save suggestion (create or update)
+        async function saveSuggestion() {
+            const btn = document.getElementById('saveSuggestionBtn');
+            const originalText = btn.textContent;
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+                
+                const data = {
+                    title: document.getElementById('suggestionTitle').value.trim(),
+                    issueDescription: document.getElementById('issueDescription').value.trim(),
+                    suggestedImprovement: document.getElementById('suggestedImprovement').value.trim(),
+                    submitterName: document.getElementById('submitterName').value.trim(),
+                    submitterEmail: document.getElementById('submitterEmail').value.trim()
+                };
+                
+                if (!data.title || !data.issueDescription || !data.suggestedImprovement || !data.submitterName) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                const url = currentEditId 
+                    ? `${API_BASE}/admin/suggestions/${currentEditId}`
+                    : `${API_BASE}/admin/suggestions`;
+                const method = currentEditId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+                
+                closeSuggestionModal();
+                loadCuratedSuggestions();
+                
+            } catch (error) {
+                console.error('Error saving suggestion:', error);
+                alert('Error saving suggestion: ' + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        // Update feedback status
+        async function updateFeedbackStatus(feedbackId, status) {
+            try {
+                // Only allow pending and approved statuses
+                if (!['pending', 'approved'].includes(status)) {
+                    alert('Invalid status. Only "pending" and "approved" are allowed.');
+                    loadFeedback(); // Reload to reset dropdown
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE}/admin/feedback/${feedbackId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+                
+                // Update local data
+                const feedback = feedbackData.find(f => f._id === feedbackId);
+                if (feedback) {
+                    feedback.status = status;
+                    renderFeedback();
+                }
+                
+            } catch (error) {
+                console.error('Error updating feedback status:', error);
+                alert('Error updating status: ' + error.message);
+                loadFeedback(); // Reload to reset
+            }
+        }
+
+        // Activate suggestion for voting
+        async function activateSuggestion(id) {
+            if (!confirm('Activate this suggestion for public voting?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/suggestions/${id}/activate`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+                
+                loadCuratedSuggestions();
+                
+            } catch (error) {
+                console.error('Error activating suggestion:', error);
+                alert('Error activating suggestion: ' + error.message);
+            }
+        }
+
+        // Close suggestion voting
+        async function closeSuggestionVoting(id) {
+            if (!confirm('Close voting for this suggestion?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/suggestions/${id}/close`, {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+                
+                loadCuratedSuggestions();
+                
+            } catch (error) {
+                console.error('Error closing suggestion voting:', error);
+                alert('Error closing suggestion voting: ' + error.message);
+            }
+        }
+
+        // Delete suggestion
+        async function deleteSuggestion(id) {
+            if (!confirm('Are you sure you want to delete this suggestion? This action cannot be undone.')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/suggestions/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.error);
+                }
+                
+                loadCuratedSuggestions();
+                
+            } catch (error) {
+                console.error('Error deleting suggestion:', error);
+                alert('Error deleting suggestion: ' + error.message);
+            }
+        }
+
+        // Refresh all data
+        function refreshAllData() {
+            const activeTab = document.querySelector('.tab-btn.active').textContent.trim();
+            
+            if (activeTab.includes('Review Feedback')) {
+                loadFeedback();
+            } else if (activeTab.includes('Manage Suggestions')) {
+                loadCuratedSuggestions();
+            }
+        }
+
+        // Reset all data (DANGEROUS - Development only)
+        async function resetAllData() {
+            const confirmReset = confirm(
+                '⚠️ WARNING: This will permanently delete ALL feedback and curated suggestions!\n\n' +
+                'This action cannot be undone. Are you absolutely sure you want to proceed?'
+            );
+            
+            if (!confirmReset) return;
+            
+            // Second confirmation
+            const finalConfirm = confirm(
+                '🚨 FINAL CONFIRMATION 🚨\n\n' +
+                'You are about to delete:\n' +
+                '• All feedback submissions\n' +
+                '• All curated suggestions\n' +
+                '• All voting data\n\n' +
+                'Type YES in your mind and click OK to proceed, or Cancel to abort.'
+            );
+            
+            if (!finalConfirm) return;
+            
+            try {
+                console.log('🗑️ Starting data reset...');
+                
+                // Reset feedback
+                const feedbackResponse = await fetch(`${API_BASE}/feedback/reset`);
+                const feedbackResult = await feedbackResponse.json();
+                
+                // Reset curated suggestions (delete all)
+                const suggestionsResponse = await fetch(`${API_BASE}/admin/suggestions`);
+                const suggestionsResult = await suggestionsResponse.json();
+                const suggestions = suggestionsResult.data || [];
+                
+                // Delete each suggestion
+                for (const suggestion of suggestions) {
+                    try {
+                        await fetch(`${API_BASE}/admin/suggestions/${suggestion._id}`, {
+                            method: 'DELETE'
+                        });
+                    } catch (error) {
+                        console.error(`Failed to delete suggestion ${suggestion._id}:`, error);
+                    }
+                }
+                
+                console.log('✅ Data reset completed');
+                alert(`✅ Reset Successful!\n\n• Deleted ${feedbackResult.deletedCount || 0} feedback items\n• Deleted ${suggestions.length} curated suggestions\n\nAll data has been cleared.`);
+                
+                // Refresh current view
+                refreshAllData();
+                
+            } catch (error) {
+                console.error('❌ Reset failed:', error);
+                alert('❌ Reset Failed!\n\nError: ' + error.message + '\n\nPlease try again or check the console for details.');
+            }
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🛠️ Admin Dashboard initialized');
+            loadFeedback(); // Load initial tab
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('suggestionModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeSuggestionModal();
+            }
+        });
+    </script>
+</body>
+</html>
